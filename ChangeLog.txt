@@ -1,0 +1,4 @@
+Cambios
+
+Modifique las clases main-container, main-titulo, panel-tablero, panel-score
+para una visualizacion sin necesidad de mover el Scroll del Mouse, ademas asi tendria una vista completa de los objetos que se moverian.
