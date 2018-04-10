@@ -34,8 +34,7 @@ body{
   border: 5px solid #E87306;
   background: rgba(232, 115, 6, 0.5);
   border-radius: 5px;
-  display: flex;
-  flex-flow: row wrap;
+  
 }
 
 .panel-score{
@@ -104,4 +103,41 @@ div[class^='col']{
   width: 99.4px;
   height: 96px;
 
+}
+
+#table table{
+  width: 595px;
+  border-collapse: collapse;
+}
+
+#table table td{
+  padding: 0;
+  margin: 0;
+  width: 85px;
+}
+/**** Clases de Las Imagenes ****/
+.img-game{
+  width: 85px;
+  height: 85px;
+  
+}
+.img1{
+  background: url(../image/1.png);
+  background-size: 85px 85px;
+}
+.img2{
+  background: url(../image/2.png);
+  background-size: 85px 85px;
+}
+.img3{
+  background: url(../image/3.png);
+  background-size: 85px 85px;
+}
+.img4{
+  background: url(../image/4.png);
+  background-size: 85px 85px;
+}
+
+.Visible{
+  z-index: 1000;
 }
