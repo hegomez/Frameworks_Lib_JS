@@ -105,16 +105,6 @@ div[class^='col']{
 
 }
 
-#table table{
-  width: 595px;
-  border-collapse: collapse;
-}
-
-#table table td{
-  padding: 0;
-  margin: 0;
-  width: 85px;
-}
 /**** Clases de Las Imagenes ****/
 .img-game{
   width: 85px;
@@ -140,4 +130,10 @@ div[class^='col']{
 
 .Visible{
   z-index: 1000;
+}
+
+.ficha{
+  float: left;
+  height: 85px;
+  width: 85px;
 }
