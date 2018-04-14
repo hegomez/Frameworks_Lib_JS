@@ -6,7 +6,7 @@ var Juego=[
 	[1,2,3,2,4,1,1,2,1,1,2,2,3,3,1,2,3,4,1,1,3,4,4,2,4,2,3,4,1,1,4,2,3,3,2,3,4,1,4,4,2,4,1,2,3,1,1,4,3]
 ];
 
-var Posc,oLeft, oTop, Lef, Top;
+var Posc,oLeft, oTop, Lef, Top, Puntuacion=0, Movimientos=0;
 
 function idJuego() {
 	var idJ=parseInt(Math.random()*10);
@@ -78,6 +78,11 @@ $(".btn-reinicio").click(function(){
 	}
 });
 
+function Escribe(Elemento,Valor)
+{
+	Elemento.text(Valor);
+}
+
 /*
 $(".img-game").draggable({ 
 	containment: "#table",
@@ -137,11 +142,64 @@ $(".img-game").draggable({
 });
 
 function move(FichaA,FichaB) {
-    FichaA.animate({"left": "+85px"}, "slow");
-    FichaA.animate({"Top": "0px"}, "slow");
-	FichaB.animate({"left": "-85px"}, "slow");
-	var ClaseA=FichaA.attr("class");
-	alert(ClaseA);
+	
+	var De=parseInt(FichaA.parent().attr('id').replace("-",""));
+	var A=parseInt(FichaB.parent().attr('id').replace("-",""));
+	var DIR=De-A;
+	console.log(DIR);
+	switch(DIR)
+	{
+		case -1:
+			FichaA.animate({"left": "+85px"}, "slow");
+		    FichaA.animate({"Top": "+10px"}, "slow");
+			FichaB.animate({"left": "-85px"}, "slow");		
+		break;
+		case 1:
+			FichaA.animate({"left": "-85px"}, "slow");
+		    FichaA.animate({"Top": "+10px"}, "slow");
+			FichaB.animate({"left": "+85px"}, "slow");
+		break;
+		case -10:
+			FichaA.animate({"top": "+85px"}, "slow");
+		    FichaA.animate({"left": "0px"}, "slow");
+			FichaB.animate({"top": "-85px"}, "slow");
+		break;
+		case 10:
+			FichaA.animate({"top": "-85px"}, "slow");
+		    FichaA.animate({"left": "0px"}, "slow");
+			FichaB.animate({"top": "+85px"}, "slow");
+		break;
+	}
+	ContA=FichaA.parent();
+	ContB=FichaB.parent();
+	setTimeout(
+   		function(){
+			FichaA.hide();
+			FichaB.hide();
+			
+			ClaseA=FichaA.attr('class').substring((FichaA.attr('class').length-4),FichaA.attr('class').length);
+			ClaseB=FichaB.attr('class').substring((FichaB.attr('class').length-4),FichaB.attr('class').length);
+			
+			FichaA.css("left", "0");
+			FichaA.css("top", "0");
+			
+			FichaB.css("left", "0");
+			FichaB.css("top", "0");
+
+			FichaA.removeClass(ClaseA);
+			FichaA.addClass(ClaseB);
+
+			FichaB.removeClass(ClaseB);
+			FichaB.addClass(ClaseA);
+
+			FichaA.show();
+			FichaB.show();
+
+			Movimientos++;
+
+			Escribe($("#movimientos-text"),Movimientos);
+			
+   	}, 1000);
 }
 
 $(".img-game").mousedown(function(){
@@ -152,297 +210,54 @@ $(".img-game").mouseup(function(){
 	$(this).removeClass("Visible");
 });
 
-$("#1-1").droppable({
-	accept: "#2-1 .img-game, #1-2 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#1-1 .img-game"));
-	}
-});
-$("#1-2").droppable({
-	accept: "#2-2 .img-game, #1-1 .img-game, #1-3 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#1-2 .img-game"));
-	}
-});
-$("#1-3").droppable({
-	accept: "#2-3 .img-game, #1-2 .img-game, #1-4 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#1-3 .img-game"));
-	}
-});
-$("#1-4").droppable({
-	accept: "#2-4 .img-game, #1-3 .img-game, #1-5 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#1-4 .img-game"));
-	}
-});
-$("#1-5").droppable({
-	accept: "#2-5 .img-game, #1-4 .img-game, #1-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#1-5 .img-game"));
-	}
-});
-$("#1-6").droppable({
-	accept: "#2-6 .img-game, #1-5 .img-game, #1-7 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#1-6 .img-game"));
-	}
-});
-$("#1-7").droppable({
-	accept: "#2-7 .img-game, #1-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#1-7 .img-game"));
-	}
-});
-$("#2-1").droppable({
-	accept: "#1-1 .img-game, #3-1 .img-game, #2-2 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#2-1 .img-game"));
-	}
-});
-$("#2-2").droppable({
-	accept: "#1-2 .img-game, #3-2 .img-game, #2-1 .img-game, #2-3 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#2-2 .img-game"));
-	}
-});
-$("#2-3").droppable({
-	accept: "#1-3 .img-game, #3-3 .img-game, #2-2 .img-game, #2-4 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#2-3 .img-game"));
-	}
-});
-$("#2-4").droppable({
-	accept: "#1-4 .img-game, #3-4 .img-game, #2-3 .img-game, #2-5 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#2-4 .img-game"));
-	}
-});
-$("#2-5").droppable({
-	accept: "#1-5 .img-game, #3-5 .img-game, #2-4 .img-game, #2-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#2-5 .img-game"));
-	}
-});
-$("#2-6").droppable({
-	accept: "#1-6 .img-game, #3-6 .img-game, #2-5 .img-game, #2-7 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#2-6 .img-game"));
-	}
-});
-$("#2-7").droppable({
-	accept: "#1-7 .img-game, #3-7 .img-game, #2-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#2-7 .img-game"));
-	}
-});
-$("#3-1").droppable({
-	accept: "#2-1 .img-game, #4-1 .img-game, #3-2 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#3-1 .img-game"));
-	}
-});
-$("#3-2").droppable({
-	accept: "#2-2 .img-game, #4-2 .img-game, #3-1 .img-game, #3-3 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#3-2 .img-game"));
-	}
-});
-$("#3-3").droppable({
-	accept: "#2-3 .img-game, #4-3 .img-game, #3-2 .img-game, #3-4 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#3-3 .img-game"));
-	}
-});
-$("#3-4").droppable({
-	accept: "#2-4 .img-game, #4-4 .img-game, #3-3 .img-game, #3-5 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#3-4 .img-game"));
-	}
-});
-$("#3-5").droppable({
-	accept: "#2-5 .img-game, #4-5 .img-game, #3-4 .img-game, #3-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#3-5 .img-game"));
-	}
-});
-$("#3-6").droppable({
-	accept: "#2-6 .img-game, #4-6 .img-game, #3-5 .img-game, #3-7 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#3-6 .img-game"));
-	}
-});
-$("#3-7").droppable({
-	accept: "#2-7 .img-game, #4-7 .img-game, #3-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#3-7 .img-game"));
-	}
-});
-$("#4-1").droppable({
-	accept: "#3-1 .img-game, #5-1 .img-game, #4-2 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#4-1 .img-game"));
-	}
-});
-$("#4-2").droppable({
-	accept: "#3-2 .img-game, #5-2 .img-game, #4-1 .img-game, #4-3 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#4-2 .img-game"));
-	}
-});
-$("#4-3").droppable({
-	accept: "#3-3 .img-game, #5-3 .img-game, #4-2 .img-game, #4-4 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#4-3 .img-game"));
-	}
-});
-$("#4-4").droppable({
-	accept: "#3-4 .img-game, #5-4 .img-game, #4-3 .img-game, #4-5 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#4-4 .img-game"));
-	}
-});
-$("#4-5").droppable({
-	accept: "#3-5 .img-game, #5-5 .img-game, #4-4 .img-game, #4-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#4-5 .img-game"));
-	}
-});
-$("#4-6").droppable({
-	accept: "#3-6 .img-game, #5-6 .img-game, #4-5 .img-game, #4-7 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#4-6 .img-game"));
-	}
-});
-$("#4-7").droppable({
-	accept: "#3-7 .img-game, #5-7 .img-game, #4-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#4-7 .img-game"));
-	}
-});
-$("#5-1").droppable({
-	accept: "#4-1 .img-game, #6-1 .img-game, #5-2 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#5-1 .img-game"));
-	}
-});
-$("#5-2").droppable({
-	accept: "#4-2 .img-game, #6-2 .img-game, #5-1 .img-game, #5-3 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#5-2 .img-game"));
-	}
-});
-$("#5-3").droppable({
-	accept: "#4-3 .img-game, #6-3 .img-game, #5-2 .img-game, #5-4 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#5-3 .img-game"));
-	}
-});
-$("#5-4").droppable({
-	accept: "#4-4 .img-game, #6-4 .img-game, #5-3 .img-game, #5-5 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#5-4 .img-game"));
-	}
-});
-$("#5-5").droppable({
-	accept: "#4-5 .img-game, #6-5 .img-game, #5-4 .img-game, #5-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#5-5 .img-game"));
-	}
-});
-$("#5-6").droppable({
-	accept: "#4-6 .img-game, #6-6 .img-game, #5-5 .img-game, #5-7 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#5-6 .img-game"));
-	}
-});
-$("#5-7").droppable({
-	accept: "#4-7 .img-game, #6-7 .img-game, #5-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#5-7 .img-game"));
-	}
-});
-$("#6-1").droppable({
-	accept: "#5-1 .img-game, #7-1 .img-game, #6-2 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#6-1 .img-game"));
-	}
-});
-$("#6-2").droppable({
-	accept: "#5-2 .img-game, #7-2 .img-game, #6-1 .img-game, #6-3 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#6-2 .img-game"));
-	}
-});
-$("#6-3").droppable({
-	accept: "#5-3 .img-game, #7-3 .img-game, #6-2 .img-game, #6-4 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#6-3 .img-game"));
-	}
-});
-$("#6-4").droppable({
-	accept: "#5-4 .img-game, #7-4 .img-game, #6-3 .img-game, #6-5 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#6-4 .img-game"));
-	}
-});
-$("#6-5").droppable({
-	accept: "#5-5 .img-game, #7-5 .img-game, #6-4 .img-game, #6-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#6-5 .img-game"));
-	}
-});
-$("#6-6").droppable({
-	accept: "#5-6 .img-game, #7-6 .img-game, #6-5 .img-game, #6-7 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#6-6 .img-game"));
-	}
-});
-$("#6-7").droppable({
-	accept: "#5-7 .img-game, #7-7 .img-game, #6-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#6-7 .img-game"));
-	}
-});
-$("#7-1").droppable({
-	accept: "#6-1 .img-game, #7-2 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#7-1 .img-game"));
-	}
-});
-$("#7-2").droppable({
-	accept: "#6-2 .img-game, #7-1 .img-game, #7-3 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#7-2 .img-game"));
-	}
-});
-$("#7-3").droppable({
-	accept: "#6-3 .img-game, #7-2 .img-game, #7-4 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#7-3 .img-game"));
-	}
-});
-$("#7-4").droppable({
-	accept: "#6-4 .img-game, #7-3 .img-game, #7-5 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#7-4 .img-game"));
-	}
-});
-$("#7-5").droppable({
-	accept: "#6-5 .img-game, #7-4 .img-game, #7-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#7-5 .img-game"));
-	}
-});
-$("#7-6").droppable({
-	accept: "#6-6 .img-game, #7-5 .img-game, #7-7 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#7-6 .img-game"));
-	}
-});
-$("#7-7").droppable({
-	accept: "#6-7 .img-game, #7-6 .img-game",
-	drop: function( event, ui ) {
-		move(ui.draggable,$("#7-7 .img-game"));
-	}
-});
+/*Seccion para Capturar el Desplazamiento de las Fichas*/
+
+$("#1-1").droppable({ accept: "#2-1 .img-game, #1-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-1 .img-game")); } });
+$("#1-2").droppable({ accept: "#2-2 .img-game, #1-1 .img-game, #1-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-2 .img-game")); } });
+$("#1-3").droppable({ accept: "#2-3 .img-game, #1-2 .img-game, #1-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-3 .img-game")); } });
+$("#1-4").droppable({ accept: "#2-4 .img-game, #1-3 .img-game, #1-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-4 .img-game")); } });
+$("#1-5").droppable({ accept: "#2-5 .img-game, #1-4 .img-game, #1-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-5 .img-game")); } });
+$("#1-6").droppable({ accept: "#2-6 .img-game, #1-5 .img-game, #1-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-6 .img-game")); } });
+$("#1-7").droppable({ accept: "#2-7 .img-game, #1-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-7 .img-game")); } });
+$("#2-1").droppable({ accept: "#1-1 .img-game, #3-1 .img-game, #2-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-1 .img-game")); } });
+$("#2-2").droppable({ accept: "#1-2 .img-game, #3-2 .img-game, #2-1 .img-game, #2-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-2 .img-game")); } });
+$("#2-3").droppable({ accept: "#1-3 .img-game, #3-3 .img-game, #2-2 .img-game, #2-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-3 .img-game")); } });
+$("#2-4").droppable({ accept: "#1-4 .img-game, #3-4 .img-game, #2-3 .img-game, #2-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-4 .img-game")); } });
+$("#2-5").droppable({ accept: "#1-5 .img-game, #3-5 .img-game, #2-4 .img-game, #2-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-5 .img-game")); } });
+$("#2-6").droppable({ accept: "#1-6 .img-game, #3-6 .img-game, #2-5 .img-game, #2-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-6 .img-game")); } });
+$("#2-7").droppable({ accept: "#1-7 .img-game, #3-7 .img-game, #2-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-7 .img-game")); } });
+$("#3-1").droppable({ accept: "#2-1 .img-game, #4-1 .img-game, #3-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-1 .img-game")); } });
+$("#3-2").droppable({ accept: "#2-2 .img-game, #4-2 .img-game, #3-1 .img-game, #3-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-2 .img-game")); } });
+$("#3-3").droppable({ accept: "#2-3 .img-game, #4-3 .img-game, #3-2 .img-game, #3-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-3 .img-game")); } });
+$("#3-4").droppable({ accept: "#2-4 .img-game, #4-4 .img-game, #3-3 .img-game, #3-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-4 .img-game")); } });
+$("#3-5").droppable({ accept: "#2-5 .img-game, #4-5 .img-game, #3-4 .img-game, #3-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-5 .img-game")); } });
+$("#3-6").droppable({ accept: "#2-6 .img-game, #4-6 .img-game, #3-5 .img-game, #3-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-6 .img-game")); } });
+$("#3-7").droppable({ accept: "#2-7 .img-game, #4-7 .img-game, #3-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-7 .img-game")); } });
+$("#4-1").droppable({ accept: "#3-1 .img-game, #5-1 .img-game, #4-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-1 .img-game")); } });
+$("#4-2").droppable({ accept: "#3-2 .img-game, #5-2 .img-game, #4-1 .img-game, #4-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-2 .img-game")); } });
+$("#4-3").droppable({ accept: "#3-3 .img-game, #5-3 .img-game, #4-2 .img-game, #4-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-3 .img-game")); } });
+$("#4-4").droppable({ accept: "#3-4 .img-game, #5-4 .img-game, #4-3 .img-game, #4-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-4 .img-game")); } });
+$("#4-5").droppable({ accept: "#3-5 .img-game, #5-5 .img-game, #4-4 .img-game, #4-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-5 .img-game")); } });
+$("#4-6").droppable({ accept: "#3-6 .img-game, #5-6 .img-game, #4-5 .img-game, #4-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-6 .img-game")); } });
+$("#4-7").droppable({ accept: "#3-7 .img-game, #5-7 .img-game, #4-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-7 .img-game")); } });
+$("#5-1").droppable({ accept: "#4-1 .img-game, #6-1 .img-game, #5-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-1 .img-game")); } });
+$("#5-2").droppable({ accept: "#4-2 .img-game, #6-2 .img-game, #5-1 .img-game, #5-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-2 .img-game")); } });
+$("#5-3").droppable({ accept: "#4-3 .img-game, #6-3 .img-game, #5-2 .img-game, #5-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-3 .img-game")); } });
+$("#5-4").droppable({ accept: "#4-4 .img-game, #6-4 .img-game, #5-3 .img-game, #5-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-4 .img-game")); } });
+$("#5-5").droppable({ accept: "#4-5 .img-game, #6-5 .img-game, #5-4 .img-game, #5-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-5 .img-game")); } });
+$("#5-6").droppable({ accept: "#4-6 .img-game, #6-6 .img-game, #5-5 .img-game, #5-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-6 .img-game")); } });
+$("#5-7").droppable({ accept: "#4-7 .img-game, #6-7 .img-game, #5-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-7 .img-game")); } });
+$("#6-1").droppable({ accept: "#5-1 .img-game, #7-1 .img-game, #6-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-1 .img-game")); } });
+$("#6-2").droppable({ accept: "#5-2 .img-game, #7-2 .img-game, #6-1 .img-game, #6-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-2 .img-game")); } });
+$("#6-3").droppable({ accept: "#5-3 .img-game, #7-3 .img-game, #6-2 .img-game, #6-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-3 .img-game")); } });
+$("#6-4").droppable({ accept: "#5-4 .img-game, #7-4 .img-game, #6-3 .img-game, #6-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-4 .img-game")); } });
+$("#6-5").droppable({ accept: "#5-5 .img-game, #7-5 .img-game, #6-4 .img-game, #6-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-5 .img-game")); } });
+$("#6-6").droppable({ accept: "#5-6 .img-game, #7-6 .img-game, #6-5 .img-game, #6-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-6 .img-game")); } });
+$("#6-7").droppable({ accept: "#5-7 .img-game, #7-7 .img-game, #6-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-7 .img-game")); } });
+$("#7-1").droppable({ accept: "#6-1 .img-game, #7-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-1 .img-game")); } });
+$("#7-2").droppable({ accept: "#6-2 .img-game, #7-1 .img-game, #7-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-2 .img-game")); } });
+$("#7-3").droppable({ accept: "#6-3 .img-game, #7-2 .img-game, #7-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-3 .img-game")); } });
+$("#7-4").droppable({ accept: "#6-4 .img-game, #7-3 .img-game, #7-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-4 .img-game")); } });
+$("#7-5").droppable({ accept: "#6-5 .img-game, #7-4 .img-game, #7-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-5 .img-game")); } });
+$("#7-6").droppable({ accept: "#6-6 .img-game, #7-5 .img-game, #7-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-6 .img-game")); } });
+$("#7-7").droppable({ accept: "#6-7 .img-game, #7-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-7 .img-game")); } });
