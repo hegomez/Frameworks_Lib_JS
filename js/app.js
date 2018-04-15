@@ -8,6 +8,16 @@ var Juego=[
 
 var Posc,oLeft, oTop, Lef, Top, Puntuacion=0, Movimientos=0;
 
+function ConteoRegresivo()
+{
+	/*var fecha = new Date();
+alert("Día: "+fecha.getDate()+"\nMes: "+(fecha.getMonth()+1)+"\nAño: "+fecha.getFullYear());
+alert("Hora: "+fecha.getHours()+"\nMinuto: "+fecha.getMinutes()+"\nSegundo: "+fecha.getSeconds()+"\nMilisegundo: "+fecha.getMilliseconds());*/
+	$('#timer').countdown('2018/04/18 19:30:10', function(event) {
+		$(this).html(event.strftime('%M:%S'));
+	});
+}
+
 function idJuego() {
 	var idJ=parseInt(Math.random()*10);
 	var Rta;
@@ -68,6 +78,7 @@ $(".btn-reinicio").click(function(){
 			}
 		}
 		$(".btn-reinicio").text("Reiniciar");
+		ConteoRegresivo();
 	}
 	else
 	{
