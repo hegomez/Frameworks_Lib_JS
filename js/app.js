@@ -6,15 +6,127 @@ var Juego=[
 	[1,2,3,2,4,1,1,2,1,1,2,2,3,3,1,2,3,4,1,1,3,4,4,2,4,2,3,4,1,1,4,2,3,3,2,3,4,1,4,4,2,4,1,2,3,1,1,4,3]
 ];
 
-var Posc,oLeft, oTop, Lef, Top, Puntuacion=0, Movimientos=0;
+var Posc,oLeft, oTop, Lef, Top, Puntuacion=0, Movimientos=0, Ficha=[];
+function ValLineaX3()
+{
+	var Lineas=0;
+	//Lineas Horizontales
+	for(var i = 1; i <= 7; i++)
+	{
+		for(var j = 1; j <= 5; j++)
+		{
+			Ficha1=$("#"+i+"-"+j).children().css("background-image");
+			Ficha2=$("#"+i+"-"+(j+1)).children().css("background-image");
+			Ficha3=$("#"+i+"-"+(j+2)).children().css("background-image");
+			if(Ficha1 == Ficha2 && Ficha2 == Ficha3 && Ficha1 == Ficha3)
+			{
+				$("#"+i+"-"+j).children().addClass("Desaparecer");
+				$("#"+i+"-"+(j+1)).children().addClass("Desaparecer");
+				$("#"+i+"-"+(j+2)).children().addClass("Desaparecer");
+				Lineas++;
+			}
+		}
+	}
+	//Lineas Verticales
+	for(var i = 1; i <= 5; i++)
+	{
+		for(var j = 1; j <= 7; j++)
+		{
+			Ficha1=$("#"+i+"-"+j).children().css("background-image");
+			Ficha2=$("#"+(i+1)+"-"+j).children().css("background-image");
+			Ficha3=$("#"+(i+2)+"-"+j).children().css("background-image");
+			if(Ficha1 == Ficha2 && Ficha2 == Ficha3 && Ficha1 == Ficha3)
+			{
+				$("#"+i+"-"+j).children().addClass("Desaparecer");
+				$("#"+(i+1)+"-"+j).children().addClass("Desaparecer");
+				$("#"+(i+2)+"-"+j).children().addClass("Desaparecer");
+				Lineas++;
+			}
+		}
+	}
+	if(Lineas>0)
+	{
+		LineaX3();
+	}
+}
+
+function LineaX3()
+{
+	$(".Desaparecer").animate({ opacity: 0 }, 250 );
+	$(".Desaparecer").animate({ opacity: 1 }, 250 );
+	$(".Desaparecer").animate({ opacity: 0 }, 250 );
+	$(".Desaparecer").animate({ opacity: 1 }, 250 );
+	$(".Desaparecer").animate({ opacity: 0 }, 250 );
+	setTimeout(
+   		function(){
+			RellenarFichas();
+   	}, 1250);
+}
+
+function RellenarFichas()
+{
+	//Recorrer
+	$(".Desaparecer").each(function(){
+		var IdF=$(this).parent().attr('id');
+		//4-1
+		var XY=IdF.split("-");
+		for(i=(XY[0]-1);i>0;i--)
+		{
+			//3 - 2 - 1
+			var top = 85 /* (XY[0] - i)*/;
+			//alert("Top Para "+i+"-"+XY[1]+":"+top);
+			//alert("#"+i+"-"+XY[1]);
+			$("#"+i+"-"+XY[1]+" .img-game").animate({"top": "+"+top+"px"}, "slow");
+			$("#"+(i+1)+"-"+XY[1]+" .img-game").removeClass("Desaparecer");
+			ClaseA=$("#"+i+"-"+XY[1]+" .img-game").attr('class').substring(($("#"+i+"-"+XY[1]+" .img-game").attr('class').length-4),$("#"+i+"-"+XY[1]+" .img-game").attr('class').length);
+			ClaseB=$("#"+(i+1)+"-"+XY[1]+" .img-game").attr('class').substring(($("#"+(i+1)+"-"+XY[1]+" .img-game").attr('class').length-4),$("#"+(i+1)+"-"+XY[1]+" .img-game").attr('class').length);
+			$("#"+(i+1)+"-"+XY[1]+" .img-game").removeClass(ClaseB);
+			$("#"+(i+1)+"-"+XY[1]+" .img-game").addClass(ClaseA);
+			$("#"+(i+1)+"-"+XY[1]+" .img-game").show();
+
+
+			//$("#2-1 .img-game").animate({"top": "50px"}, "slow");
+		}
+	    /*var CntAbajo=$(this).parent().attr('id').split("-");
+	    /*var id=$(this).parent().attr('id').split("-");*/
+	    /*CntAbajo[0];
+	    for (i = (CntAbajo[0]-1); i > 0; i--)
+	    {
+	    	alert(i+"-"+CntAbajo[1]); //FichaA.animate({"Top": "+10px"}, "slow");
+	    	//alert(CntAbajo);
+	    }*/
+	});
+}
 
 function ConteoRegresivo()
 {
-	/*var fecha = new Date();
-alert("Día: "+fecha.getDate()+"\nMes: "+(fecha.getMonth()+1)+"\nAño: "+fecha.getFullYear());
-alert("Hora: "+fecha.getHours()+"\nMinuto: "+fecha.getMinutes()+"\nSegundo: "+fecha.getSeconds()+"\nMilisegundo: "+fecha.getMilliseconds());*/
-	$('#timer').countdown('2018/04/18 19:30:10', function(event) {
+	var fecha = new Date(),
+		D = fecha.getDate(),
+		dia = "",
+        M = fecha.getMonth() + 1,
+        mes = "";
+        ano = fecha.getFullYear(),
+        H = fecha.getHours(),
+        hra = "",
+        Mi = fecha.getMinutes()+59,
+        min = "",
+        S = fecha.getSeconds();
+        seg = "";
+       if(D.length==1) {dia="0"+D;} else {dia=D;}
+       if(M.length==1) {mes="0"+M;} else {mes=M;}
+       if(H.length==1) {hra="0"+H;} else {hra=H;}
+       if(Mi.length==1) {min="0"+Mi;} else {min=Mi;}
+       if(S.length==1) {seg="0"+S;} else {seg=S;}
+	var Tiempo = ano + "/" + mes + "/" + dia + " "+hra+":"+min+":"+seg;
+	
+	$('#timer').countdown(Tiempo)
+	.on('update.countdown', function(event) {
 		$(this).html(event.strftime('%M:%S'));
+	})
+	.on('finish.countdown', function(event) {
+		$(".panel-tablero").fadeOut();
+		$(".panel-score").css("width", "100%");
+		$(".time").fadeOut();
 	});
 }
 
@@ -45,24 +157,6 @@ function idJuego() {
 	return Rta;
 }
 
-function Movimiento(Mov,id,x,y)
-{
-	switch (Mov)
-	{
-		case 'Derecha':
-			
-		break;
-		case 'Iquierda':
-			//
-		break;
-		case 'Abajo':
-			//
-		break;
-		case 'Arriba':
-			//
-		break;
-	}
-}
 $(".btn-reinicio").click(function(){
 	var Opcion=$(".btn-reinicio").text();
 	if(Opcion=='Iniciar')
@@ -78,6 +172,7 @@ $(".btn-reinicio").click(function(){
 			}
 		}
 		$(".btn-reinicio").text("Reiniciar");
+		ValLineaX3();
 		ConteoRegresivo();
 	}
 	else
@@ -210,6 +305,7 @@ function move(FichaA,FichaB) {
 
 			Escribe($("#movimientos-text"),Movimientos);
 			
+			ValLineaX3();
    	}, 1000);
 }
 
