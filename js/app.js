@@ -1,102 +1,15 @@
-var Juego=[
-	[],
-	[3,4,1,2,2,3,1,3,3,4,4,1,4,4,2,1,2,2,1,2,4,4,3,3,2,2,3,3,4,1,4,4,3,2,1,3,4,1,1,4,3,4,1,3,4,1,2,1,3],
-	[2,4,1,4,1,3,3,4,4,1,4,3,4,4,3,2,3,2,3,3,4,1,4,3,2,1,4,3,2,3,1,3,2,2,4,3,3,1,3,3,3,2,3,4,2,1,4,1,1],
-	[1,2,3,2,1,2,3,4,1,2,1,2,1,2,3,4,1,4,3,4,1,2,3,4,4,2,3,4,1,2,3,3,1,2,3,4,1,1,1,4,1,2,1,2,2,2,1,2,4],
-	[1,2,3,2,4,1,1,2,1,1,2,2,3,3,1,2,3,4,1,1,3,4,4,2,4,2,3,4,1,1,4,2,3,3,2,3,4,1,4,4,2,4,1,2,3,1,1,4,3]
-];
-
-var Posc,oLeft, oTop, Lef, Top, Puntuacion=0, Movimientos=0, Ficha=[];
-function ValLineaX3()
-{
-	var Lineas=0;
-	//Lineas Horizontales
-	for(var i = 1; i <= 7; i++)
-	{
-		for(var j = 1; j <= 5; j++)
-		{
-			Ficha1=$("#"+i+"-"+j).children().css("background-image");
-			Ficha2=$("#"+i+"-"+(j+1)).children().css("background-image");
-			Ficha3=$("#"+i+"-"+(j+2)).children().css("background-image");
-			if(Ficha1 == Ficha2 && Ficha2 == Ficha3 && Ficha1 == Ficha3)
-			{
-				$("#"+i+"-"+j).children().addClass("Desaparecer");
-				$("#"+i+"-"+(j+1)).children().addClass("Desaparecer");
-				$("#"+i+"-"+(j+2)).children().addClass("Desaparecer");
-				Lineas++;
-			}
-		}
-	}
-	//Lineas Verticales
-	for(var i = 1; i <= 5; i++)
-	{
-		for(var j = 1; j <= 7; j++)
-		{
-			Ficha1=$("#"+i+"-"+j).children().css("background-image");
-			Ficha2=$("#"+(i+1)+"-"+j).children().css("background-image");
-			Ficha3=$("#"+(i+2)+"-"+j).children().css("background-image");
-			if(Ficha1 == Ficha2 && Ficha2 == Ficha3 && Ficha1 == Ficha3)
-			{
-				$("#"+i+"-"+j).children().addClass("Desaparecer");
-				$("#"+(i+1)+"-"+j).children().addClass("Desaparecer");
-				$("#"+(i+2)+"-"+j).children().addClass("Desaparecer");
-				Lineas++;
-			}
-		}
-	}
-	if(Lineas>0)
-	{
-		LineaX3();
-	}
-}
-
-function LineaX3()
-{
-	$(".Desaparecer").animate({ opacity: 0 }, 250 );
-	$(".Desaparecer").animate({ opacity: 1 }, 250 );
-	$(".Desaparecer").animate({ opacity: 0 }, 250 );
-	$(".Desaparecer").animate({ opacity: 1 }, 250 );
-	$(".Desaparecer").animate({ opacity: 0 }, 250 );
-	setTimeout(
-   		function(){
-			RellenarFichas();
-   	}, 1250);
-}
-
-function RellenarFichas()
-{
-	//Recorrer
-	$(".Desaparecer").each(function(){
-		var IdF=$(this).parent().attr('id');
-		//4-1
-		var XY=IdF.split("-");
-		for(i=(XY[0]-1);i>0;i--)
-		{
-			//3 - 2 - 1
-			var top = 85 /* (XY[0] - i)*/;
-			//alert("Top Para "+i+"-"+XY[1]+":"+top);
-			//alert("#"+i+"-"+XY[1]);
-			$("#"+i+"-"+XY[1]+" .img-game").animate({"top": "+"+top+"px"}, "slow");
-			$("#"+(i+1)+"-"+XY[1]+" .img-game").removeClass("Desaparecer");
-			ClaseA=$("#"+i+"-"+XY[1]+" .img-game").attr('class').substring(($("#"+i+"-"+XY[1]+" .img-game").attr('class').length-4),$("#"+i+"-"+XY[1]+" .img-game").attr('class').length);
-			ClaseB=$("#"+(i+1)+"-"+XY[1]+" .img-game").attr('class').substring(($("#"+(i+1)+"-"+XY[1]+" .img-game").attr('class').length-4),$("#"+(i+1)+"-"+XY[1]+" .img-game").attr('class').length);
-			$("#"+(i+1)+"-"+XY[1]+" .img-game").removeClass(ClaseB);
-			$("#"+(i+1)+"-"+XY[1]+" .img-game").addClass(ClaseA);
-			$("#"+(i+1)+"-"+XY[1]+" .img-game").show();
-
-
-			//$("#2-1 .img-game").animate({"top": "50px"}, "slow");
-		}
-	    /*var CntAbajo=$(this).parent().attr('id').split("-");
-	    /*var id=$(this).parent().attr('id').split("-");*/
-	    /*CntAbajo[0];
-	    for (i = (CntAbajo[0]-1); i > 0; i--)
-	    {
-	    	alert(i+"-"+CntAbajo[1]); //FichaA.animate({"Top": "+10px"}, "slow");
-	    	//alert(CntAbajo);
-	    }*/
-	});
-}
+var FichaTam=85;
+var SelFil=-1;
+var SelCol=-1;
+var posX;
+var posY;
+var Fichas=new Array();
+var movingItems=0;
+var GameState="pick";
+var swiped=false;
+var ImgFondo=new Array("1.png","2.png","3.png","4.png");
+var Movimientos=0;
+var Puntuacion=0;
 
 function ConteoRegresivo()
 {
@@ -108,7 +21,7 @@ function ConteoRegresivo()
         ano = fecha.getFullYear(),
         H = fecha.getHours(),
         hra = "",
-        Mi = fecha.getMinutes()+59,
+        Mi = fecha.getMinutes()+2,
         min = "",
         S = fecha.getSeconds();
         seg = "";
@@ -130,49 +43,13 @@ function ConteoRegresivo()
 	});
 }
 
-function idJuego() {
-	var idJ=parseInt(Math.random()*10);
-	var Rta;
-	switch(idJ)
-	{
-		case 1:
-		case 2:
-		case 3:
-		Rta=1;
-		break;
-		case 4:
-		case 5:
-		Rta=2;
-		break;
-		case 6:
-		case 7:
-		Rta=3;
-		break;
-		case 8:
-		case 9:
-		case 0:
-		Rta=4;
-		break;
-	}
-	return Rta;
-}
-
-$(".btn-reinicio").click(function(){
+$(".btn-reinicio").click(function()
+{
 	var Opcion=$(".btn-reinicio").text();
 	if(Opcion=='Iniciar')
 	{
-		var IdGame=Juego[idJuego()];
-		var td=0;
-		for(i=1;i<=7;i++)
-		{
-			for(k=1;k<=7;k++)
-			{
-				$("#"+ i +"-"+ k +" div").addClass("img"+IdGame[td]);
-				td++;
-			}
-		}
 		$(".btn-reinicio").text("Reiniciar");
-		ValLineaX3();
+		Juego();
 		ConteoRegresivo();
 	}
 	else
@@ -189,182 +66,383 @@ function Escribe(Elemento,Valor)
 	Elemento.text(Valor);
 }
 
-/*
-$(".img-game").draggable({ 
-	containment: "#table",
-	scroll: false,
-	start: function() {
-
-	},
-	drag: function() {
-        var $this = $(this);
-        var thisPos = $this.position();
-        var parentPos = $this.parent().position();
-
-        if($this.text()=='')
-        {
-        	Posc=[0,0];
-        }
-        else
-        {
-        	Posc=$this.text().split(', ');
-        }
-        var x = thisPos.left - parentPos.left;
-        var y = thisPos.top - parentPos.top;
-
-        if(x>40)
-        {
-        	Movimiento('Derecha',$this.parent().attr('id'),x,y);
-        }
-
-        if(x<-40)
-        {
-        	//alert("Movimiento('Iquierda')");
-        }
-
-        if(y>40)
-        {
-        	//alert("Movimiento('Abajo')");
-        }
-
-        if(y<-40)
-        {
-        	//alert("Movimiento('Arriba')");
-        }
-
-        $this.text(x + ", " + y);
-
-
-    },
-    stop: function() {
-    	
-    }
-});
-*/
-
-$(".img-game").draggable({
-	containment: "#table",
-	scroll: false
-});
-
-function move(FichaA,FichaB) {
-	
-	var De=parseInt(FichaA.parent().attr('id').replace("-",""));
-	var A=parseInt(FichaB.parent().attr('id').replace("-",""));
-	var DIR=De-A;
-	console.log(DIR);
-	switch(DIR)
+function Juego()
+{
+  	for(i=0;i<8;i++)
+  	{
+     	Fichas[i]=new Array();
+     	for(j=0;j<7;j++)
+     	{
+          	Fichas[i][j]=-1;
+     	}
+  	}
+	for(i=0;i<7;i++)
 	{
-		case -1:
-			FichaA.animate({"left": "+85px"}, "slow");
-		    FichaA.animate({"Top": "+10px"}, "slow");
-			FichaB.animate({"left": "-85px"}, "slow");		
-		break;
-		case 1:
-			FichaA.animate({"left": "-85px"}, "slow");
-		    FichaA.animate({"Top": "+10px"}, "slow");
-			FichaB.animate({"left": "+85px"}, "slow");
-		break;
-		case -10:
-			FichaA.animate({"top": "+85px"}, "slow");
-		    FichaA.animate({"left": "0px"}, "slow");
-			FichaB.animate({"top": "-85px"}, "slow");
-		break;
-		case 10:
-			FichaA.animate({"top": "-85px"}, "slow");
-		    FichaA.animate({"left": "0px"}, "slow");
-			FichaB.animate({"top": "+85px"}, "slow");
-		break;
+		for(j=0;j<7;j++)
+		{
+			do{
+				Fichas[i][j]=Math.floor(Math.random()*4);
+			}while(LineaGo(i,j));
+			$("#table").append('<div class = "gem" id = "Fichas_'+i+'_'+j+'"></div>');
+			$("#Fichas_"+i+"_"+j).css({"top":(i*FichaTam)+4+"px","left":(j*FichaTam)+4+"px","width":"85px","height":"85px","position":"absolute","border":"1px solid white","cursor":"pointer","background":"url(image/"+ImgFondo[Fichas[i][j]],"background-size":"85px 85px"});
+		}
 	}
-	ContA=FichaA.parent();
-	ContB=FichaB.parent();
-	setTimeout(
-   		function(){
-			FichaA.hide();
-			FichaB.hide();
-			
-			ClaseA=FichaA.attr('class').substring((FichaA.attr('class').length-4),FichaA.attr('class').length);
-			ClaseB=FichaB.attr('class').substring((FichaB.attr('class').length-4),FichaB.attr('class').length);
-			
-			FichaA.css("left", "0");
-			FichaA.css("top", "0");
-			
-			FichaB.css("left", "0");
-			FichaB.css("top", "0");
-
-			FichaA.removeClass(ClaseA);
-			FichaA.addClass(ClaseB);
-
-			FichaB.removeClass(ClaseB);
-			FichaB.addClass(ClaseA);
-
-			FichaA.show();
-			FichaB.show();
-
-			Movimientos++;
-
-			Escribe($("#movimientos-text"),Movimientos);
-			
-			ValLineaX3();
-   	}, 1000);
 }
 
-$(".img-game").mousedown(function(){
-	$(this).addClass("Visible");
+function LineaGo(row,col)
+{
+	return LineaVertical(row,col)||LineaHorizontal(row,col);
+}
+
+function LineaVertical(row,col)
+{
+	var FichaPos=Fichas[row][col];
+	var Linea=0;
+	var tmp=row;
+	while(tmp>0 && Fichas[tmp-1][col]==FichaPos)
+	{
+		Linea++;
+		tmp--;
+	}
+	tmp=row;
+	while(tmp<6 && Fichas[tmp+1][col]==FichaPos)
+	{
+		Linea++;
+		tmp++;
+	}
+	return Linea>1
+}
+
+function LineaHorizontal(row,col)
+{
+	var FichaPos=Fichas[row][col];
+	var Linea=0;
+	var tmp=col
+	while(tmp>0 && Fichas[row][tmp-1]==FichaPos)
+	{
+		Linea++;
+		tmp--;
+	}
+	tmp=col;
+	while(tmp<6 && Fichas[row][tmp+1]==FichaPos)
+	{
+		Linea++;
+		tmp++;
+	}
+	return Linea>1
+}
+
+$("#table").swipe({
+ 	swipeStatus:function(event, phase, direction, distance, duration, fingers)
+ 	{
+		if(phase=="start" && GameState=="pick")
+		{
+			swiped = false;
+			if(SelFil==-1)
+			{
+				SelFil=Math.floor((event.y)/FichaTam);
+				SelCol=Math.floor((event.x)/FichaTam);
+			}
+			else{
+				posX=Math.floor((event.x)/FichaTam);
+				posY=Math.floor((event.y)/FichaTam);
+				if((Math.abs(SelFil-posY)==1 && SelCol==posX)||(Math.abs(SelCol-posX)==1 && SelFil==posY))
+				{
+					GameState="switch";
+					FichaSwitch();
+				}
+				else{
+					SelFil=posY;
+					SelCol=posX;
+				}
+			}
+		}
+		if(phase=="move" && GameState=="pick" && distance>30 && !swiped)
+		{
+			swiped=true;
+			posX=Math.floor((event.x)/FichaTam);
+			posY=Math.floor((event.y)/FichaTam);
+			Movimientos++;
+			switch(direction)
+			{
+				case "up":
+					if(posY==SelFil)
+					{
+						posY--;
+					}
+					if(posY>=0)
+					{
+						GameState="switch";
+						FichaSwitch();
+					}
+					break;
+				case "down":
+					if(posY==SelFil)
+					{
+						posY++;
+					}
+					if(posY<=6)
+					{
+						GameState="switch";
+						FichaSwitch();
+					}
+					break;
+				case "left":
+					if(posX==SelCol)
+					{
+						posX--;
+					}
+					if(posX>=0)
+					{
+						GameState="switch";
+						FichaSwitch();
+					}
+					break;
+				case "right":
+					if(posX==SelCol)
+					{
+						posX++;
+					}
+					if(posX<=6)
+					{
+						GameState="switch";
+						FichaSwitch();
+					}
+					break;
+			}
+		}
+	}
 });
 
-$(".img-game").mouseup(function(){
-	$(this).removeClass("Visible");
-});
+function ValMovimiento()
+{
+	movingItems--;
+		if(movingItems==0)
+		{
+			switch(GameState)
+			{
+				case "revert":
+				case "switch":
+              		if(!LineaGo(SelFil,SelCol) && !LineaGo(posY,posX))
+              		{
+           			if(GameState!="revert")
+           			{
+						GameState="revert";
+           				FichaSwitch();
+           			}
+           			else{
+						GameState="pick";
+						SelFil=-1;	
+					}
+                	}    
+				else{
+					GameState="remove";
+                		if(LineaGo(SelFil,SelCol))
+                		{
+                			RemoverFichas(SelFil,SelCol);
+					}
+                		if(LineaGo(posY,posX))
+                		{
+                			RemoverFichas(posY,posX);
+					}
+					OcultarFichas();
+				}
+				break;
+			case "remove":
+				BajarFichas();
+				break;
+			case "refill":
+				NuevasFichas();
+				break;
+		}
+	}
+}
 
-/*Seccion para Capturar el Desplazamiento de las Fichas*/
+function NuevasFichas()
+{
+	var gemsPlaced = 0;
+	for(i=0;i<7;i++)
+	{
+		if(Fichas[0][i]==-1)
+		{
+			Fichas[0][i]=Math.floor(Math.random()*4);
+      		$("#table").append('<div class = "gem" id = "Fichas_0_'+i+'"></div>');
+      		$("#Fichas_0_"+i).css({"top":"4px","left":(i*FichaTam)+4+"px","width":"85px","height":"85px","position":"absolute","border":"1px solid white","cursor":"pointer","background":"url(image/"+ImgFondo[Fichas[0][i]],"background-size":"85px 85px"});
+      		gemsPlaced++;
+		}
+	}
+	if(gemsPlaced)
+	{
+		GameState="remove";
+		BajarFichas();
+	}
+	else{
+		var combo=0
+		for(i=0;i<7;i++)
+		{
+  			for(j=0;j<7;j++)
+  			{
+  				if(j<=5 && Fichas[i][j]==Fichas[i][j+1] && Fichas[i][j]==Fichas[i][j+2])
+  				{
+					combo++;
+					RemoverFichas(i,j); 	
+				}
+				if(i<=5 && Fichas[i][j]==Fichas[i+1][j] && Fichas[i][j]==Fichas[i+2][j])
+				{
+					combo++;
+					RemoverFichas(i,j); 	
+				}		 	
+			}
+		}
+		if(combo>0)
+		{
+			GameState="remove";
+			OcultarFichas();
+		}		
+		else{
+			GameState="pick";
+			SelFil=-1;
+		}
+	}
+}
 
-$("#1-1").droppable({ accept: "#2-1 .img-game, #1-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-1 .img-game")); } });
-$("#1-2").droppable({ accept: "#2-2 .img-game, #1-1 .img-game, #1-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-2 .img-game")); } });
-$("#1-3").droppable({ accept: "#2-3 .img-game, #1-2 .img-game, #1-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-3 .img-game")); } });
-$("#1-4").droppable({ accept: "#2-4 .img-game, #1-3 .img-game, #1-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-4 .img-game")); } });
-$("#1-5").droppable({ accept: "#2-5 .img-game, #1-4 .img-game, #1-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-5 .img-game")); } });
-$("#1-6").droppable({ accept: "#2-6 .img-game, #1-5 .img-game, #1-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-6 .img-game")); } });
-$("#1-7").droppable({ accept: "#2-7 .img-game, #1-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#1-7 .img-game")); } });
-$("#2-1").droppable({ accept: "#1-1 .img-game, #3-1 .img-game, #2-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-1 .img-game")); } });
-$("#2-2").droppable({ accept: "#1-2 .img-game, #3-2 .img-game, #2-1 .img-game, #2-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-2 .img-game")); } });
-$("#2-3").droppable({ accept: "#1-3 .img-game, #3-3 .img-game, #2-2 .img-game, #2-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-3 .img-game")); } });
-$("#2-4").droppable({ accept: "#1-4 .img-game, #3-4 .img-game, #2-3 .img-game, #2-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-4 .img-game")); } });
-$("#2-5").droppable({ accept: "#1-5 .img-game, #3-5 .img-game, #2-4 .img-game, #2-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-5 .img-game")); } });
-$("#2-6").droppable({ accept: "#1-6 .img-game, #3-6 .img-game, #2-5 .img-game, #2-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-6 .img-game")); } });
-$("#2-7").droppable({ accept: "#1-7 .img-game, #3-7 .img-game, #2-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#2-7 .img-game")); } });
-$("#3-1").droppable({ accept: "#2-1 .img-game, #4-1 .img-game, #3-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-1 .img-game")); } });
-$("#3-2").droppable({ accept: "#2-2 .img-game, #4-2 .img-game, #3-1 .img-game, #3-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-2 .img-game")); } });
-$("#3-3").droppable({ accept: "#2-3 .img-game, #4-3 .img-game, #3-2 .img-game, #3-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-3 .img-game")); } });
-$("#3-4").droppable({ accept: "#2-4 .img-game, #4-4 .img-game, #3-3 .img-game, #3-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-4 .img-game")); } });
-$("#3-5").droppable({ accept: "#2-5 .img-game, #4-5 .img-game, #3-4 .img-game, #3-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-5 .img-game")); } });
-$("#3-6").droppable({ accept: "#2-6 .img-game, #4-6 .img-game, #3-5 .img-game, #3-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-6 .img-game")); } });
-$("#3-7").droppable({ accept: "#2-7 .img-game, #4-7 .img-game, #3-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#3-7 .img-game")); } });
-$("#4-1").droppable({ accept: "#3-1 .img-game, #5-1 .img-game, #4-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-1 .img-game")); } });
-$("#4-2").droppable({ accept: "#3-2 .img-game, #5-2 .img-game, #4-1 .img-game, #4-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-2 .img-game")); } });
-$("#4-3").droppable({ accept: "#3-3 .img-game, #5-3 .img-game, #4-2 .img-game, #4-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-3 .img-game")); } });
-$("#4-4").droppable({ accept: "#3-4 .img-game, #5-4 .img-game, #4-3 .img-game, #4-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-4 .img-game")); } });
-$("#4-5").droppable({ accept: "#3-5 .img-game, #5-5 .img-game, #4-4 .img-game, #4-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-5 .img-game")); } });
-$("#4-6").droppable({ accept: "#3-6 .img-game, #5-6 .img-game, #4-5 .img-game, #4-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-6 .img-game")); } });
-$("#4-7").droppable({ accept: "#3-7 .img-game, #5-7 .img-game, #4-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#4-7 .img-game")); } });
-$("#5-1").droppable({ accept: "#4-1 .img-game, #6-1 .img-game, #5-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-1 .img-game")); } });
-$("#5-2").droppable({ accept: "#4-2 .img-game, #6-2 .img-game, #5-1 .img-game, #5-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-2 .img-game")); } });
-$("#5-3").droppable({ accept: "#4-3 .img-game, #6-3 .img-game, #5-2 .img-game, #5-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-3 .img-game")); } });
-$("#5-4").droppable({ accept: "#4-4 .img-game, #6-4 .img-game, #5-3 .img-game, #5-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-4 .img-game")); } });
-$("#5-5").droppable({ accept: "#4-5 .img-game, #6-5 .img-game, #5-4 .img-game, #5-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-5 .img-game")); } });
-$("#5-6").droppable({ accept: "#4-6 .img-game, #6-6 .img-game, #5-5 .img-game, #5-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-6 .img-game")); } });
-$("#5-7").droppable({ accept: "#4-7 .img-game, #6-7 .img-game, #5-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#5-7 .img-game")); } });
-$("#6-1").droppable({ accept: "#5-1 .img-game, #7-1 .img-game, #6-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-1 .img-game")); } });
-$("#6-2").droppable({ accept: "#5-2 .img-game, #7-2 .img-game, #6-1 .img-game, #6-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-2 .img-game")); } });
-$("#6-3").droppable({ accept: "#5-3 .img-game, #7-3 .img-game, #6-2 .img-game, #6-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-3 .img-game")); } });
-$("#6-4").droppable({ accept: "#5-4 .img-game, #7-4 .img-game, #6-3 .img-game, #6-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-4 .img-game")); } });
-$("#6-5").droppable({ accept: "#5-5 .img-game, #7-5 .img-game, #6-4 .img-game, #6-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-5 .img-game")); } });
-$("#6-6").droppable({ accept: "#5-6 .img-game, #7-6 .img-game, #6-5 .img-game, #6-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-6 .img-game")); } });
-$("#6-7").droppable({ accept: "#5-7 .img-game, #7-7 .img-game, #6-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#6-7 .img-game")); } });
-$("#7-1").droppable({ accept: "#6-1 .img-game, #7-2 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-1 .img-game")); } });
-$("#7-2").droppable({ accept: "#6-2 .img-game, #7-1 .img-game, #7-3 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-2 .img-game")); } });
-$("#7-3").droppable({ accept: "#6-3 .img-game, #7-2 .img-game, #7-4 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-3 .img-game")); } });
-$("#7-4").droppable({ accept: "#6-4 .img-game, #7-3 .img-game, #7-5 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-4 .img-game")); } });
-$("#7-5").droppable({ accept: "#6-5 .img-game, #7-4 .img-game, #7-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-5 .img-game")); } });
-$("#7-6").droppable({ accept: "#6-6 .img-game, #7-5 .img-game, #7-7 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-6 .img-game")); } });
-$("#7-7").droppable({ accept: "#6-7 .img-game, #7-6 .img-game", drop: function( event, ui ) { move(ui.draggable,$("#7-7 .img-game")); } });
+function BajarFichas()
+{
+	var fellDown=0;
+	for(j=0;j<7;j++)
+	{
+		for(i=6;i>0;i--)
+		{
+			if(Fichas[i][j]==-1 && Fichas[i-1][j]>=0)
+			{
+				$("#Fichas_"+(i-1)+"_"+j).addClass("fall").attr("id","Fichas_"+i+"_"+j);
+				Fichas[i][j]=Fichas[i-1][j];
+				Fichas[i-1][j]=-1;
+				fellDown++;
+			}
+		}
+	}
+	$.each($(".fall"),function()
+	{
+		movingItems++;
+		$(this).animate({
+			top: "+="+FichaTam
+			},{
+			duration: 100,
+			complete: function()
+			{
+				$(this).removeClass("fall");
+				ValMovimiento();
+			}
+		});
+	});     
+	if(fellDown==0)
+	{
+		GameState="refill";
+		movingItems=1;
+		ValMovimiento();	
+	}	
+}
+
+function OcultarFichas()
+{
+	Puntuacion += $(".remove").length * 50;
+	Escribe($("#score-text"),Puntuacion);
+	$.each($(".remove"),function()
+	{
+		movingItems++;
+		$(this).animate({
+			opacity:0
+			},{
+			duration: 200,
+			complete: function()
+			{
+				$(this).remove();
+				ValMovimiento();
+			}
+		});
+	});
+}
+
+function FichaSwitch()
+{
+	Escribe($("#movimientos-text"),Movimientos);
+	var yOffset=SelFil-posY;
+	var xOffset=SelCol-posX;
+	$("#Fichas_"+SelFil+"_"+SelCol).addClass("switch").attr("dir","-1");
+	$("#Fichas_"+posY+"_"+posX).addClass("switch").attr("dir","1");
+	$.each($(".switch"),function()
+	{
+		movingItems++;
+		$(this).animate({
+			left: "+="+xOffset*FichaTam*$(this).attr("dir"),
+			top: "+="+yOffset*FichaTam*$(this).attr("dir")
+			},{
+			duration: 250,
+			complete: function()
+			{
+				ValMovimiento();
+			}
+		}).removeClass("switch")
+	});
+	$("#Fichas_"+SelFil+"_"+SelCol).attr("id","temp");
+	$("#Fichas_"+posY+"_"+posX).attr("id","Fichas_"+SelFil+"_"+SelCol);
+	$("#temp").attr("id","Fichas_"+posY+"_"+posX);
+	var temp=Fichas[SelFil][SelCol];
+	Fichas[SelFil][SelCol]=Fichas[posY][posX];
+	Fichas[posY][posX]=temp;
+}
+
+function RemoverFichas(row,col)
+{
+	var FichaPos = Fichas[row][col];
+	var tmp = row;
+	$("#Fichas_"+row+"_"+col).addClass("remove");
+	if(LineaVertical(row,col))
+	{
+		while(tmp>0 && Fichas[tmp-1][col]==FichaPos)
+		{                          
+			$("#Fichas_"+(tmp-1)+"_"+col).addClass("remove");
+			Fichas[tmp-1][col]=-1;
+			tmp--;
+		}
+		tmp=row;
+		while(tmp<6 && Fichas[tmp+1][col]==FichaPos)
+		{
+			$("#Fichas_"+(tmp+1)+"_"+col).addClass("remove");
+			Fichas[tmp+1][col]=-1;
+			tmp++;
+		}
+	}
+	if(LineaHorizontal(row,col))
+	{
+		tmp = col;
+		while(tmp>0 && Fichas[row][tmp-1]==FichaPos)
+		{
+			$("#Fichas_"+row+"_"+(tmp-1)).addClass("remove");
+			Fichas[row][tmp-1]=-1;
+			tmp--;
+		}
+		tmp=col;
+		while(tmp<6 && Fichas[row][tmp+1]==FichaPos)
+		{
+			$("#Fichas_"+row+"_"+(tmp+1)).addClass("remove");
+			Fichas[row][tmp+1]=-1;
+			tmp++;
+		}
+	}
+	Fichas[row][col]=-1;
+}
+
+setInterval(function()
+{
+	var color=$(".main-titulo").css("color");
+	if(color=="rgb(220, 255, 14)")
+	{
+		$(".main-titulo").css("color","white");
+	}
+	else
+	{
+		$(".main-titulo").css("color","#DCFF0E");
+	}
+},1000);
